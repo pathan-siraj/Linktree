@@ -48,8 +48,7 @@
     .link-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-between;
       padding: 15px;
       background: #f3f4f6;
       border-radius: 10px;
@@ -66,48 +65,105 @@
       transform: translateY(-2px);
     }
 
+    /* Icon and text container */
+    .link-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Three dots icon styling */
+    .share-icon {
+      font-size: 24px;
+      cursor: pointer;
+      color: #888;
+      line-height: 1;
+    }
+
     footer {
       margin-top: 40px;
       font-size: 12px;
       color: #888;
     }
-
-    /* Simple icons */
-    .icon {
-      font-size: 18px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Profile -->
   <img class="profile-pic" src="profile.jpg" alt="Profile Picture">
   <h1>Siraj Pathan</h1>
   <p class="tagline">Social Media Accounts 🔗</p>
 
-  <!-- Links -->
   <div class="links">
-    <a class="link-btn" href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">
-      ⭐ Instagram
-    </a>
-    <a class="link-btn" href="https://discord.gg/HeRrkmST" target="_blank">
-      💬 Discord
-    </a>
-    <a class="link-btn" href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">
-      🐦 Twitter
-    </a>
-    <a class="link-btn" href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">
-      💼 LinkedIn
-    </a>
-    <a class="link-btn" href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">
-      👻 Snapchat
-    </a>
+    <div class="link-btn">
+      <div class="link-content">
+        ⭐ <a href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">Instagram</a>
+      </div>
+      <span class="share-icon" data-title="Siraj's Instagram" data-url="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" data-text="Check out Siraj's Instagram profile!">⋮</span>
+    </div>
+
+    <div class="link-btn">
+      <div class="link-content">
+        💬 <a href="https://discord.gg/HeRrkmST" target="_blank">Discord</a>
+      </div>
+      <span class="share-icon" data-title="Siraj's Discord" data-url="https://discord.gg/HeRrkmST" data-text="Join Siraj's Discord server!">⋮</span>
+    </div>
+
+    <div class="link-btn">
+      <div class="link-content">
+        🐦 <a href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">Twitter</a>
+      </div>
+      <span class="share-icon" data-title="Siraj's Twitter" data-url="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" data-text="Follow Siraj on Twitter!">⋮</span>
+    </div>
+
+    <div class="link-btn">
+      <div class="link-content">
+        💼 <a href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+      </div>
+      <span class="share-icon" data-title="Siraj's LinkedIn" data-url="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-text="Connect with Siraj on LinkedIn!">⋮</span>
+    </div>
+
+    <div class="link-btn">
+      <div class="link-content">
+        👻 <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
+      </div>
+      <span class="share-icon" data-title="Siraj's Snapchat" data-url="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" data-text="Add Siraj on Snapchat!">⋮</span>
+    </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     © 2025 Siraj Pathan | Made with ❤️
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const shareIcons = document.querySelectorAll('.share-icon');
+
+      shareIcons.forEach(icon => {
+        icon.addEventListener('click', async (event) => {
+          event.preventDefault();
+
+          const title = icon.dataset.title;
+          const url = icon.dataset.url;
+          const text = icon.dataset.text;
+          
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: title,
+                url: url,
+                text: text
+              });
+              console.log('Link shared successfully!');
+            } catch (error) {
+              console.error('Error sharing link:', error);
+            }
+          } else {
+            alert(`Sharing for "${title}" is not supported on this browser. You can copy the link instead: ${url}`);
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
