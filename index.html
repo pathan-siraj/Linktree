@@ -16,7 +16,6 @@
       overflow: hidden;
       min-height: 100vh;
       position: relative;
-      
       background: linear-gradient(
         to bottom,
         #8a2be2 0%,
@@ -81,12 +80,16 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       text-decoration: none;
-      color: #fff;
       font-size: 16px;
       font-weight: 500;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background 0.2s ease, transform 0.1s ease,
                   top 0.5s ease, left 0.5s ease, rotate 0.5s ease;
+    }
+    
+    .link-btn a {
+        color: #fff;
+        text-decoration: none;
     }
 
     .link-btn:hover {
@@ -126,17 +129,19 @@
       bottom: 0;
       left: 0;
     }
-
-    /* Styles for the "shaken" state */
-    body.shaken .links {
-      height: 350px;
-      display: block;
+    
+    /* Keyframes for the bounce and shake effect */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      25% { transform: translateY(-5px) rotate(-2deg); }
+      50% { transform: translateY(0) rotate(0); }
+      75% { transform: translateY(-5px) rotate(2deg); }
     }
-
-    body.shaken .link-btn {
-      position: absolute;
-      width: calc(100% - 30px);
-      left: 0;
+    
+    .link-btn.shaking {
+      animation: bounce 0.5s ease-in-out infinite;
+      position: relative; /* Ensure position is set for animation */
+      z-index: 1;
     }
 
     /* Star animation styles */
@@ -161,10 +166,10 @@
       content: '★';
       color: transparent;
       text-shadow: 
-        0 0 5px #fff,
-        0 0 10px #fff,
-        0 0 15px #fff,
-        0 0 20px #fff;
+        0 0 3px #fff,
+        0 0 6px #fff,
+        0 0 9px #fff,
+        0 0 12px #fff;
     }
 
     @keyframes twinkle {
@@ -174,11 +179,11 @@
       }
       50% {
         opacity: 1;
-        transform: scale(1.2) translateY(-20px);
+        transform: scale(1.0) translateY(-15px);
       }
       100% {
         opacity: 0;
-        transform: scale(0.8) translateY(-50px);
+        transform: scale(0.7) translateY(-30px);
       }
     }
   </style>
@@ -230,164 +235,7 @@
     © 2025 Siraj Pathan | Made with ❤️
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.body.classList.remove('loading');
-      }, 100);
-
-      const shareIcons = document.querySelectorAll('.share-icon');
-      shareIcons.forEach(icon => {
-        icon.addEventListener('click', async (event) => {
-          event.preventDefault();
-          const title = icon.dataset.title;
-          const url = icon.dataset.url;
-          const text = icon.dataset.text;
-          
-          if (navigator.share) {
-            try {
-              await navigator.share({ title, url, text });
-              console.log('Link shared successfully!');
-            } catch (error) {
-              console.error('Error sharing link:', error);
-            }
-          } else {
-            alert(`Sharing for "${title}" is not supported on this browser. You can copy the link instead: ${url}`);
-          }
-        });
-      });
-
-      // --- Shake and Tilt Effects ---
-      const linkButtons = document.querySelectorAll('.link-btn');
-      const linksContainer = document.querySelector('.links');
-      let isShaken = false;
-      let tiltEnabled = false;
-      let lastTapTime = 0;
-
-      // Shake Detection
-      let lastX, lastY, lastZ;
-      const shakeThreshold = 15;
-      const shakeDebounceTime = 500;
-      let lastShakeTime = 0;
-
-      if (window.DeviceMotionEvent) {
-        window.addEventListener('devicemotion', event => {
-          const currentTime = new Date().getTime();
-          if (currentTime - lastShakeTime < shakeDebounceTime) {
-            return;
-          }
-
-          const acceleration = event.accelerationIncludingGravity;
-
-          if (lastX && lastY && lastZ) {
-            let deltaX = Math.abs(acceleration.x - lastX);
-            let deltaY = Math.abs(acceleration.y - lastY);
-            let deltaZ = Math.abs(acceleration.z - lastZ);
-
-            if ((deltaX > shakeThreshold && deltaY > shakeThreshold) ||
-                (deltaX > shakeThreshold && deltaZ > shakeThreshold) ||
-                (deltaY > shakeThreshold && deltaZ > shakeThreshold)) {
-              
-              isShaken = !isShaken;
-              document.body.classList.toggle('shaken', isShaken);
-              lastShakeTime = currentTime;
-
-              if (isShaken) {
-                linksContainer.style.height = `${linkButtons.length * 55 + 30}px`;
-                linkButtons.forEach((btn, index) => {
-                  const bottomPosition = linksContainer.offsetHeight - (index + 1) * 55;
-                  btn.style.top = `${bottomPosition}px`;
-                  btn.style.left = '0';
-                  btn.style.transform = 'translate(0px, 0px) rotate(0deg)';
-                });
-              } else {
-                linkButtons.forEach((btn) => {
-                  btn.style.top = '';
-                  btn.style.left = '';
-                  btn.style.transform = '';
-                });
-                linksContainer.style.height = '';
-              }
-            }
-          }
-
-          lastX = acceleration.x;
-          lastY = acceleration.y;
-          lastZ = acceleration.z;
-        });
-      }
-
-      // Double-tap and Star Animation
-      const doubleTapDelay = 300;
-
-      document.body.addEventListener('touchend', (event) => {
-        const currentTime = new Date().getTime();
-        const tapLength = currentTime - lastTapTime;
-
-        if (tapLength < doubleTapDelay && tapLength > 0) {
-          tiltEnabled = !tiltEnabled;
-          document.body.classList.toggle('tilt-active', tiltEnabled);
-
-          if (tiltEnabled) {
-            createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-          }
-          lastTapTime = 0;
-        } else {
-          lastTapTime = currentTime;
-        }
-      });
-
-      function createStarAnimation(x, y) {
-        let starsContainer = document.querySelector('.stars-container');
-        if (!starsContainer) {
-          starsContainer = document.createElement('div');
-          starsContainer.classList.add('stars-container');
-          document.body.appendChild(starsContainer);
-        }
-
-        for (let i = 0; i < 10; i++) {
-          const star = document.createElement('span');
-          star.classList.add('star');
-          
-          const randX = x + (Math.random() - 0.5) * 100;
-          const randY = y + (Math.random() - 0.5) * 100;
-
-          star.style.left = `${randX}px`;
-          star.style.top = `${randY}px`;
-          star.style.animationDelay = `${i * 0.05}s`;
-          starsContainer.appendChild(star);
-
-          star.addEventListener('animationend', () => {
-            star.remove();
-            if (starsContainer.children.length === 0) {
-              starsContainer.remove();
-            }
-          });
-        }
-      }
-
-      // Tilt Detection (now conditional on tiltEnabled)
-      if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', event => {
-          if (tiltEnabled) {
-            const { beta, gamma } = event;
-
-            linkButtons.forEach(btn => {
-              const tiltX = gamma * 0.5;
-              const tiltY = beta * 0.5;
-              const tiltRotate = gamma * 0.1;
-
-              btn.style.transform = `translate(${tiltX}px, ${tiltY}px) rotate(${tiltRotate}deg)`;
-            });
-          } else {
-            linkButtons.forEach(btn => {
-              btn.style.transform = '';
-            });
-          }
-        });
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
