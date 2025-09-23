@@ -129,8 +129,7 @@
       bottom: 0;
       left: 0;
     }
-    
-    /* Keyframes for the bounce and shake effect */
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0) rotate(0); }
       25% { transform: translateY(-5px) rotate(-2deg); }
@@ -140,11 +139,10 @@
     
     .link-btn.shaking {
       animation: bounce 0.5s ease-in-out infinite;
-      position: relative; /* Ensure position is set for animation */
+      position: relative;
       z-index: 1;
     }
 
-    /* Star animation styles */
     .stars-container {
       position: fixed;
       top: 0;
@@ -186,6 +184,49 @@
         transform: scale(0.7) translateY(-30px);
       }
     }
+
+    /* Crystal and Scene CSS */
+    .crystal-container {
+        position: fixed;
+        bottom: 10%; /* Place it in the black part of the page */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 150px;
+        perspective: 500px;
+        z-index: -1;
+    }
+    .crystal {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        cursor: pointer;
+        
+        /* Default slow rotation animation */
+        animation: rotate-crystal 10s linear infinite;
+    }
+
+    /* The individual faces of the crystal */
+    .face {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transform-origin: 0 0 -50px;
+        transform: rotateX(70deg) rotateY(45deg);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Animation for continuous slow rotation */
+    @keyframes rotate-crystal {
+        from { transform: rotateY(0deg) rotateX(15deg); }
+        to { transform: rotateY(360deg) rotateX(15deg); }
+    }
+    
   </style>
 </head>
 <body class="loading">
@@ -228,6 +269,17 @@
         <img src="snapchat.png" alt="Snapchat" class="link-icon"> <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
       </div>
       <span class="share-icon" data-title="Siraj's Snapchat" data-url="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" data-text="Add Siraj on Snapchat!">⋮</span>
+    </div>
+  </div>
+
+  <div class="crystal-container">
+    <div class="crystal" id="crystal">
+      <div class="face"></div>
+      <div class="face"></div>
+      <div class="face"></div>
+      <div class="face"></div>
+      <div class="face"></div>
+      <div class="face"></div>
     </div>
   </div>
 
