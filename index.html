@@ -3,30 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Links</title>
+  <title>Sakshi | All My Links</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f5f5f5; }
-    h1 { margin-top: 40px; }
-    .btn {
-      display: block;
-      margin: 15px auto;
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #eee;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    p.tagline {
+      margin: 5px 0 25px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .links {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       padding: 15px;
-      width: 80%;
-      max-width: 300px;
-      background: #007BFF;
-      color: white;
-      text-decoration: none;
+      background: #f3f4f6;
       border-radius: 10px;
+      text-decoration: none;
+      color: #000;
+      font-size: 16px;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .link-btn:hover {
+      background: #e5e7eb;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* Simple icons */
+    .icon {
       font-size: 18px;
     }
-    .btn:hover { background: #0056b3; }
   </style>
 </head>
 <body>
-  <h1>🌐 My Links</h1>
-  <a class="btn" href="https://instagram.com/yourid" target="_blank">Instagram</a>
-  <a class="btn" href="https://youtube.com/yourid" target="_blank">YouTube</a>
-  <a class="btn" href="https://wa.me/yourphonenumber" target="_blank">WhatsApp</a>
-  <a class="btn" href="mailto:youremail@example.com">Email Me</a>
+
+  <!-- Profile -->
+  <img class="profile-pic" src="your-profile.jpg" alt="Profile Picture">
+  <h1>Sakshi</h1>
+  <p class="tagline">All my links 🔗</p>
+
+  <!-- Links -->
+  <div class="links">
+    <a class="link-btn" href="https://youtube.com" target="_blank">
+      ⭐ YouTube
+    </a>
+    <a class="link-btn" href="https://discord.com" target="_blank">
+      💬 Discord
+    </a>
+    <a class="link-btn" href="https://twitter.com" target="_blank">
+      🐦 Twitter
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Sakshi | Made with ❤️
+  </footer>
+
 </body>
 </html>
