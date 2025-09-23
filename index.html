@@ -14,6 +14,7 @@
       flex-direction: column;
       align-items: center;
       padding: 30px 15px;
+      overflow: hidden; /* Prevents scrollbars during tilt */
     }
 
     body.loading .profile-pic,
@@ -32,21 +33,21 @@
       object-fit: cover;
       border: 3px solid #eee;
       margin-bottom: 15px;
-      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
     }
 
     h1 {
       margin: 0;
       font-size: 24px;
       font-weight: bold;
-      transition: opacity 0.5s ease-in-out 0.1s, transform 0.5s ease-in-out 0.1s;
+      transition: opacity 1s ease-in-out 0.2s, transform 1s ease-in-out 0.2s;
     }
 
     p.tagline {
       margin: 5px 0 25px;
       font-size: 14px;
       color: #444;
-      transition: opacity 0.5s ease-in-out 0.2s, transform 0.5s ease-in-out 0.2s;
+      transition: opacity 1s ease-in-out 0.4s, transform 1s ease-in-out 0.4s;
     }
 
     .links {
@@ -55,7 +56,8 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
-      transition: opacity 0.5s ease-in-out 0.3s, transform 0.5s ease-in-out 0.3s;
+      transition: opacity 1s ease-in-out 0.6s, transform 1s ease-in-out 0.6s;
+      position: relative;
     }
 
     .link-btn {
@@ -69,8 +71,9 @@
       color: #000;
       font-size: 16px;
       font-weight: 500;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      transition: background 0.2s ease, transform 0.1s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: background 0.2s ease, transform 0.1s ease,
+                  top 0.5s ease, left 0.5s ease, rotate 0.5s ease;
     }
 
     .link-btn:hover {
@@ -95,7 +98,19 @@
       margin-top: 40px;
       font-size: 12px;
       color: #888;
-      transition: opacity 0.5s ease-in-out 0.4s, transform 0.5s ease-in-out 0.4s;
+      transition: opacity 1s ease-in-out 0.8s, transform 1s ease-in-out 0.8s;
+    }
+
+    /* Styles for the "shaken" state */
+    body.shaken .links {
+      height: 350px;
+      display: block;
+    }
+
+    body.shaken .link-btn {
+      position: absolute;
+      width: calc(100% - 30px);
+      left: 0;
     }
   </style>
 </head>
@@ -178,6 +193,73 @@
           }
         });
       });
+
+      // --- New Shake and Tilt Effects ---
+      const linkButtons = document.querySelectorAll('.link-btn');
+      const linksContainer = document.querySelector('.links');
+      let isShaken = false;
+
+      // Shake Detection
+      let lastX, lastY, lastZ;
+      let shakeThreshold = 15;
+
+      if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', event => {
+          const acceleration = event.accelerationIncludingGravity;
+
+          if (lastX && lastY && lastZ) {
+            let deltaX = Math.abs(acceleration.x - lastX);
+            let deltaY = Math.abs(acceleration.y - lastY);
+            let deltaZ = Math.abs(acceleration.z - lastZ);
+
+            if ((deltaX > shakeThreshold && deltaY > shakeThreshold) ||
+                (deltaX > shakeThreshold && deltaZ > shakeThreshold) ||
+                (deltaY > shakeThreshold && deltaZ > shakeThreshold)) {
+              
+              isShaken = !isShaken;
+              document.body.classList.toggle('shaken', isShaken);
+
+              if (isShaken) {
+                linksContainer.style.height = `${linkButtons.length * 55}px`;
+                linkButtons.forEach((btn, index) => {
+                  const bottomPosition = linksContainer.offsetHeight - (index + 1) * 55;
+                  btn.style.top = `${bottomPosition}px`;
+                  btn.style.left = '0';
+                  btn.style.rotate = '0deg';
+                });
+              } else {
+                linkButtons.forEach((btn) => {
+                  btn.style.top = '';
+                  btn.style.left = '';
+                  btn.style.rotate = '';
+                });
+                linksContainer.style.height = '';
+              }
+            }
+          }
+
+          lastX = acceleration.x;
+          lastY = acceleration.y;
+          lastZ = acceleration.z;
+        });
+      }
+
+      // Tilt Detection
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', event => {
+          if (!isShaken) {
+            const { beta, gamma } = event;
+
+            linkButtons.forEach(btn => {
+              const tiltX = gamma * 0.5;
+              const tiltY = beta * 0.5;
+              const tiltRotate = gamma * 0.1;
+
+              btn.style.transform = `translate(${tiltX}px, ${tiltY}px) rotate(${tiltRotate}deg)`;
+            });
+          }
+        });
+      }
     });
   </script>
 
