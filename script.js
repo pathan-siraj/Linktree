@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             (deltaX > shakeThreshold && deltaZ > shakeThreshold) ||
             (deltaY > shakeThreshold && deltaZ > shakeThreshold)) {
           
-          if (!isShaken) { // Only trigger the effect if it's not already on
+          if (!isShaken) {
             isShaken = true;
             linkButtons.forEach(btn => btn.classList.add('shaking'));
           }
@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (tiltEnabled) {
           createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-          // If tilt is enabled, disable shake
           if (isShaken) {
             isShaken = false;
             linkButtons.forEach(btn => btn.classList.remove('shaking'));
@@ -154,5 +153,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
+  }
+
+  // --- Crystal Rotation Logic ---
+  const crystal = document.getElementById('crystal');
+  let isDragging = false;
+  let startX, startY;
+  let currentRotationY = 0;
+  let currentRotationX = 0;
+  let rotationSpeed = 0;
+  let animationFrame;
+
+  crystal.addEventListener('mousedown', startDrag);
+  crystal.addEventListener('mousemove', drag);
+  crystal.addEventListener('mouseup', endDrag);
+  crystal.addEventListener('mouseleave', endDrag);
+
+  crystal.addEventListener('touchstart', startDrag);
+  crystal.addEventListener('touchmove', drag);
+  crystal.addEventListener('touchend', endDrag);
+  
+  function startDrag(event) {
+    event.preventDefault();
+    isDragging = true;
+    startX = (event.touches ? event.touches[0].clientX : event.clientX);
+    startY = (event.touches ? event.touches[0].clientY : event.clientY);
+    
+    // Stop the default CSS animation
+    crystal.style.animation = 'none';
+    cancelAnimationFrame(animationFrame);
+  }
+
+  function drag(event) {
+    if (!isDragging) return;
+    
+    const clientX = (event.touches ? event.touches[0].clientX : event.clientX);
+    const clientY = (event.touches ? event.touches[0].clientY : event.clientY);
+    
+    const deltaX = clientX - startX;
+    const deltaY = clientY - startY;
+
+    // Adjust rotation based on drag speed
+    currentRotationY += deltaX * 0.5;
+    currentRotationX -= deltaY * 0.5;
+
+    // Apply the new rotation
+    crystal.style.transform = `rotateY(${currentRotationY}deg) rotateX(${currentRotationX}deg)`;
+
+    // Update start positions for next frame
+    startX = clientX;
+    startY = clientY;
+  }
+
+  function endDrag() {
+    isDragging = false;
+    // You could add some decay or momentum here if you want
+    // For now, it just stops.
   }
 });
