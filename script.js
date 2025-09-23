@@ -1,4 +1,3 @@
-// script.js - No changes needed, remains as provided previously
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.body.classList.remove('loading');
@@ -27,10 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Shake and Tilt Effects ---
   const linkButtons = document.querySelectorAll('.link-btn');
-  const linksContainer = document.querySelector('.links');
   let isShaken = false;
   let tiltEnabled = false;
-  let lastTapTime = 0;
+  let taps = [];
 
   // Shake Detection
   let lastX, lastY, lastZ;
@@ -41,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.DeviceMotionEvent) {
     window.addEventListener('devicemotion', event => {
       const currentTime = new Date().getTime();
-      if (currentTime - lastShakeTime < shakeDebounceTime) {
+      if (currentTime - lastShakeTime < shakeDebounceTime || tiltEnabled) {
         return;
       }
 
@@ -56,28 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
             (deltaX > shakeThreshold && deltaZ > shakeThreshold) ||
             (deltaY > shakeThreshold && deltaZ > shakeThreshold)) {
           
-          isShaken = !isShaken;
-          document.body.classList.toggle('shaken', isShaken);
-          lastShakeTime = currentTime;
-
-          if (isShaken) {
-            linksContainer.style.height = `${linkButtons.length * 55 + 30}px`;
-            linkButtons.forEach((btn, index) => {
-              const bottomPosition = linksContainer.offsetHeight - (index + 1) * 55;
-              btn.style.top = `${bottomPosition}px`;
-              btn.style.left = '0';
-              btn.style.transform = 'translate(0px, 0px) rotate(0deg)';
-            });
-            tiltEnabled = false;
-            document.body.classList.remove('tilt-active');
-          } else {
-            linkButtons.forEach((btn) => {
-              btn.style.top = '';
-              btn.style.left = '';
-              btn.style.transform = '';
-            });
-            linksContainer.style.height = '';
+          if (!isShaken) { // Only trigger the effect if it's not already on
+            isShaken = true;
+            linkButtons.forEach(btn => btn.classList.add('shaking'));
           }
+          lastShakeTime = currentTime;
         }
       }
 
@@ -87,34 +68,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Double-tap and Star Animation
-  const doubleTapDelay = 300;
+  // Tap Detection (Double-tap for Tilt, Triple-tap for Shake)
+  const tapDelay = 300;
+  let lastTapTime = 0;
 
   document.body.addEventListener('touchend', (event) => {
     const currentTime = new Date().getTime();
     const tapLength = currentTime - lastTapTime;
 
-    if (tapLength < doubleTapDelay && tapLength > 0) {
-      tiltEnabled = !tiltEnabled;
-      document.body.classList.toggle('tilt-active', tiltEnabled);
-
-      if (tiltEnabled) {
-        createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+    if (tapLength < tapDelay && tapLength > 0) {
+      taps.push(currentTime);
+      if (taps.length === 2) {
+        // Double Tap
+        taps = [];
+        tiltEnabled = !tiltEnabled;
+        document.body.classList.toggle('tilt-active', tiltEnabled);
+        
+        if (tiltEnabled) {
+          createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+          // If tilt is enabled, disable shake
+          if (isShaken) {
+            isShaken = false;
+            linkButtons.forEach(btn => btn.classList.remove('shaking'));
+          }
+        }
+      } else if (taps.length === 3) {
+        // Triple Tap
+        taps = [];
         if (isShaken) {
           isShaken = false;
-          document.body.classList.remove('shaken');
-          linkButtons.forEach((btn) => {
-            btn.style.top = '';
-            btn.style.left = '';
-            btn.style.transform = '';
-          });
-          linksContainer.style.height = '';
+          linkButtons.forEach(btn => btn.classList.remove('shaking'));
         }
       }
-      lastTapTime = 0;
     } else {
-      lastTapTime = currentTime;
+      taps = [currentTime];
     }
+    lastTapTime = currentTime;
   });
 
   function createStarAnimation(x, y) {
@@ -128,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < 10; i++) {
       const star = document.createElement('span');
       star.classList.add('star');
-      star.innerHTML = '⭐';
       
       const randX = x + (Math.random() - 0.5) * 100;
       const randY = y + (Math.random() - 0.5) * 100;
@@ -147,10 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Tilt Detection (now conditional on tiltEnabled)
+  // Tilt Detection
   if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', event => {
-      if (tiltEnabled && !isShaken) {
+      if (tiltEnabled) {
         const { beta, gamma } = event;
 
         linkButtons.forEach(btn => {
@@ -160,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           btn.style.transform = `translate(${tiltX}px, ${tiltY}px) rotate(${tiltRotate}deg)`;
         });
-      } else if (!tiltEnabled && !isShaken) {
+      } else {
         linkButtons.forEach(btn => {
           btn.style.transform = '';
         });
