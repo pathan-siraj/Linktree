@@ -8,8 +8,7 @@
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #fff;
-      color: #000;
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -17,6 +16,14 @@
       overflow: hidden;
       min-height: 100vh;
       position: relative;
+      
+      background: linear-gradient(
+        to bottom,
+        #8a2be2 0%,
+        #4b0082 20%,
+        #000000 80%,
+        #000000 100%
+      );
     }
 
     body.loading .profile-pic,
@@ -49,7 +56,7 @@
     p.tagline {
       margin: 5px 0 25px;
       font-size: 14px;
-      color: #444;
+      color: #ccc;
       transition: opacity 1s ease-in-out 0.4s, transform 1s ease-in-out 0.4s;
     }
 
@@ -69,19 +76,21 @@
       align-items: center;
       justify-content: space-between;
       padding: 15px;
-      background: #f3f4f6;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       text-decoration: none;
-      color: #000;
+      color: #fff;
       font-size: 16px;
       font-weight: 500;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background 0.2s ease, transform 0.1s ease,
                   top 0.5s ease, left 0.5s ease, rotate 0.5s ease;
     }
 
     .link-btn:hover {
-      background: #e5e7eb;
+      background: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
     }
 
@@ -94,14 +103,20 @@
     .share-icon {
       font-size: 24px;
       cursor: pointer;
-      color: #888;
+      color: #ccc;
       line-height: 1;
+    }
+
+    .link-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
     }
 
     footer {
       width: 100%;
       text-align: center;
-      background-color: #fff;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
       padding: 15px 0;
       font-size: 12px;
       color: #888;
@@ -110,7 +125,6 @@
       position: fixed;
       bottom: 0;
       left: 0;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     }
 
     /* Styles for the "shaken" state */
@@ -138,11 +152,19 @@
 
     .star {
       position: absolute;
-      color: gold;
       font-size: 20px;
       animation: twinkle 1s ease-out forwards;
       opacity: 0;
-      text-shadow: 0 0 5px gold, 0 0 10px orange;
+    }
+    
+    .star::before {
+      content: '★';
+      color: transparent;
+      text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #fff,
+        0 0 20px #fff;
     }
 
     @keyframes twinkle {
@@ -170,35 +192,35 @@
   <div class="links">
     <div class="link-btn">
       <div class="link-content">
-        ⭐ <a href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">Instagram</a>
+        <img src="insta.png" alt="Instagram" class="link-icon"> <a href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">Instagram</a>
       </div>
       <span class="share-icon" data-title="Siraj's Instagram" data-url="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" data-text="Check out Siraj's Instagram profile!">⋮</span>
     </div>
 
     <div class="link-btn">
       <div class="link-content">
-        💬 <a href="https://discord.gg/HeRrkmST" target="_blank">Discord</a>
+        <img src="discord.png" alt="Discord" class="link-icon"> <a href="https://discord.gg/HeRrkmST" target="_blank">Discord</a>
       </div>
       <span class="share-icon" data-title="Siraj's Discord" data-url="https://discord.gg/HeRrkmST" data-text="Join Siraj's Discord server!">⋮</span>
     </div>
 
     <div class="link-btn">
       <div class="link-content">
-        🐦 <a href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">Twitter</a>
+        <img src="twitter.jpg" alt="Twitter" class="link-icon"> <a href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">Twitter</a>
       </div>
       <span class="share-icon" data-title="Siraj's Twitter" data-url="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" data-text="Follow Siraj on Twitter!">⋮</span>
     </div>
 
     <div class="link-btn">
       <div class="link-content">
-        💼 <a href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+        <img src="linkedin.png" alt="LinkedIn" class="link-icon"> <a href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
       </div>
       <span class="share-icon" data-title="Siraj's LinkedIn" data-url="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-text="Connect with Siraj on LinkedIn!">⋮</span>
     </div>
 
     <div class="link-btn">
       <div class="link-content">
-        👻 <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
+        <img src="snapchat.png" alt="Snapchat" class="link-icon"> <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
       </div>
       <span class="share-icon" data-title="Siraj's Snapchat" data-url="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" data-text="Add Siraj on Snapchat!">⋮</span>
     </div>
@@ -278,8 +300,6 @@
                   btn.style.left = '0';
                   btn.style.transform = 'translate(0px, 0px) rotate(0deg)';
                 });
-                tiltEnabled = false;
-                document.body.classList.remove('tilt-active');
               } else {
                 linkButtons.forEach((btn) => {
                   btn.style.top = '';
@@ -310,16 +330,6 @@
 
           if (tiltEnabled) {
             createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-            if (isShaken) {
-              isShaken = false;
-              document.body.classList.remove('shaken');
-              linkButtons.forEach((btn) => {
-                btn.style.top = '';
-                btn.style.left = '';
-                btn.style.transform = '';
-              });
-              linksContainer.style.height = '';
-            }
           }
           lastTapTime = 0;
         } else {
@@ -338,7 +348,6 @@
         for (let i = 0; i < 10; i++) {
           const star = document.createElement('span');
           star.classList.add('star');
-          star.innerHTML = '⭐';
           
           const randX = x + (Math.random() - 0.5) * 100;
           const randY = y + (Math.random() - 0.5) * 100;
@@ -360,7 +369,7 @@
       // Tilt Detection (now conditional on tiltEnabled)
       if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', event => {
-          if (tiltEnabled && !isShaken) {
+          if (tiltEnabled) {
             const { beta, gamma } = event;
 
             linkButtons.forEach(btn => {
@@ -370,7 +379,7 @@
 
               btn.style.transform = `translate(${tiltX}px, ${tiltY}px) rotate(${tiltRotate}deg)`;
             });
-          } else if (!tiltEnabled && !isShaken) {
+          } else {
             linkButtons.forEach(btn => {
               btn.style.transform = '';
             });
