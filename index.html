@@ -270,6 +270,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        min-height: 400px; /* Added to prevent overflow */
     }
     
     .flip-container.flipped .flipper {
@@ -280,12 +281,15 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
+        backface-visibility: hidden; /* This is the key change */
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 0;
+    }
+
+    .flip-container.flipped .front {
+        backface-visibility: visible;
     }
     
     .back {
@@ -296,10 +300,10 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         padding: 20px;
         box-sizing: border-box;
-        display: flex; /* Added for centering */
-        flex-direction: column; /* Added for centering */
-        justify-content: center; /* Added for centering */
-        align-items: center; /* Added for centering */
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
     }
     
     .back h2, .back p {
@@ -320,7 +324,7 @@
         font-size: 14px;
         line-height: 1.6;
         color: #eee;
-        text-align: center; /* Changed from 'justify' */
+        text-align: center; 
     }
 
     /* New button for the flip effect */
