@@ -296,6 +296,10 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         padding: 20px;
         box-sizing: border-box;
+        display: flex; /* Added for centering */
+        flex-direction: column; /* Added for centering */
+        justify-content: center; /* Added for centering */
+        align-items: center; /* Added for centering */
     }
     
     .back h2, .back p {
@@ -316,7 +320,7 @@
         font-size: 14px;
         line-height: 1.6;
         color: #eee;
-        text-align: justify;
+        text-align: center; /* Changed from 'justify' */
     }
 
     /* New button for the flip effect */
