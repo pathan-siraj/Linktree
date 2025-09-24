@@ -53,19 +53,21 @@
 
     /* Specific Video Container for the Red Box Area */
     .red-box-video-container {
-        position: relative;
+        position: fixed; /* Anchors the video to a specific place on the screen */
+        bottom: 50px; /* Position it above the footer */
+        left: 50%;
+        transform: translateX(-50%);
         width: 100%;
-        max-width: 400px; /* Matches .links max-width */
-        height: 150px; /* Approximate height of the red box in your image */
-        margin-top: 20px; /* Adjust spacing from the links above */
-        border-radius: 10px; /* Match button border-radius if desired */
-        overflow: hidden; /* Crucial to contain the video */
-        z-index: 0; /* Keeps it in the correct layer */
+        max-width: 400px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        z-index: -1;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: transparent; /* Ensure underlying black gradient is visible */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add shadow like buttons */
+        background-color: transparent;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .red-box-video-container video {
@@ -78,7 +80,7 @@
         height: auto;
         transform: translate(-50%, -50%);
         object-fit: cover;
-        opacity: 0.2; /* Video transparency */
+        opacity: 0.2;
     }
 
     /* Gradient overlay for blending video edges *within* the container */
@@ -89,9 +91,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* Creates a fade effect from the edges towards the center */
         background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%);
-        z-index: 1; /* Place gradient on top of the video */
+        z-index: 1;
         pointer-events: none;
     }
 
@@ -389,12 +390,6 @@
           </div>
         </div>
         
-        <div class="red-box-video-container">
-            <video autoplay loop muted playsinline>
-                <source src="video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
       </div>
       <div class="back">
         <h2>Siraj Pathan</h2>
@@ -410,6 +405,13 @@
         </p>
       </div>
     </div>
+  </div>
+
+  <div class="red-box-video-container">
+    <video autoplay loop muted playsinline>
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
   </div>
 
   <footer>
