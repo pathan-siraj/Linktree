@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const title = icon.dataset.title;
       const url = icon.dataset.url;
       const text = icon.dataset.text;
-      
+
       if (navigator.share) {
         try {
           await navigator.share({ title, url, text });
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if ((deltaX > shakeThreshold && deltaY > shakeThreshold) ||
             (deltaX > shakeThreshold && deltaZ > shakeThreshold) ||
             (deltaY > shakeThreshold && deltaZ > shakeThreshold)) {
-          
+
           if (!isShaken) {
             isShaken = true;
             linkButtons.forEach(btn => btn.classList.add('shaking'));
@@ -84,12 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tiltEnabled = !tiltEnabled;
         document.body.classList.toggle('tilt-active', tiltEnabled);
         
-        if (tiltEnabled) {
-          createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
-          if (isShaken) {
-            isShaken = false;
-            linkButtons.forEach(btn => btn.classList.remove('shaking'));
-          }
+        // This is the key change
+        createStarAnimation(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+
+        if (isShaken) {
+          isShaken = false;
+          linkButtons.forEach(btn => btn.classList.remove('shaking'));
         }
       } else if (taps.length === 3) {
         // Triple Tap
@@ -113,10 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(starsContainer);
     }
 
+    // Clear existing stars before adding new ones
+    starsContainer.innerHTML = ''; 
+
     for (let i = 0; i < 10; i++) {
       const star = document.createElement('span');
       star.classList.add('star');
-      
+
       const randX = x + (Math.random() - 0.5) * 100;
       const randY = y + (Math.random() - 0.5) * 100;
 
