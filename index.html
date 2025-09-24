@@ -53,14 +53,17 @@
 
     /* Specific Video Container for the Red Box Area */
     .red-box-video-container {
-        position: relative; /* Changed to relative */
+        position: absolute; /* Changed to absolute to place it correctly */
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
         width: 100%;
         max-width: 400px; /* Matches .links max-width */
         height: 150px; /* Approximate height of the red box in your image */
         margin-top: 15px; /* Adjust spacing from the links above */
         border-radius: 10px; /* Match button border-radius if desired */
         overflow: hidden; /* Crucial to contain the video */
-        z-index: 0; /* Keep it behind links but in front of body background */
+        z-index: -1; /* Placed behind the flip-container but in front of the background image */
         display: flex;
         justify-content: center;
         align-items: center;
