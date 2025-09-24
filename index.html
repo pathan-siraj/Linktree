@@ -26,53 +26,6 @@
       );
     }
     
-    .background-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -100; /* Placed behind all content */
-        opacity: 0.15; /* Optional transparency */
-    }
-
-    /* CSS for the blurred edges of the video */
-    .background-video-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -100;
-      pointer-events: none;
-    }
-    
-    .background-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
-      
-    }
-    
-    .background-video::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      box-shadow: 
-        inset 0 0 50px 50px #000000, 
-        inset 0 0 100px 100px #000000;
-    }
-
     body.loading .profile-pic,
     body.loading h1,
     body.loading .tagline,
@@ -80,6 +33,43 @@
     body.loading footer {
       opacity: 0;
       transform: translateY(20px);
+    }
+
+    /* Video Container for Bottom Section */
+    .bottom-video-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40vh; /* Adjust this value to change the video's height */
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bottom-video-container video {
+      position: absolute;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      opacity: 0.2; /* Controls the video transparency */
+    }
+
+    /* Gradient overlay to blend the video's top edge with the background */
+    .bottom-video-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, transparent, rgba(0,0,0,1));
+      z-index: 1; /* Place the gradient on top of the video */
     }
 
     .profile-pic {
@@ -328,8 +318,8 @@
 </head>
 <body class="loading">
 
-  <div class="background-video-container">
-    <video autoplay loop muted playsinline class="background-video">
+  <div class="bottom-video-container">
+    <video autoplay loop muted playsinline>
       <source src="video.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
