@@ -155,59 +155,85 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- Crystal Rotation Logic ---
-  const crystal = document.getElementById('crystal');
-  let isDragging = false;
-  let startX, startY;
-  let currentRotationY = 0;
-  let currentRotationX = 0;
-  let rotationSpeed = 0;
-  let animationFrame;
+  // --- Crystal Image Rotation Logic ---
+  const crystalImage = document.getElementById('crystal-image');
+  let isCrystalDragging = false;
+  let lastClientX = 0;
+  let currentImageRotation = 0; // Stores the current Z rotation in degrees
+  let animationFrameId;
 
-  crystal.addEventListener('mousedown', startDrag);
-  crystal.addEventListener('mousemove', drag);
-  crystal.addEventListener('mouseup', endDrag);
-  crystal.addEventListener('mouseleave', endDrag);
+  // Function to apply rotation and update transform
+  function applyCrystalRotation() {
+      // Get the current translateX value from the computed style
+      const style = window.getComputedStyle(crystalImage);
+      const transform = style.getPropertyValue('transform');
+      let translateXMatch = transform.match(/translateX\(([^)]+)px\)/);
+      let translateX = translateXMatch ? parseFloat(translateXMatch[1]) : -50; // Default to -50 if not found
 
-  crystal.addEventListener('touchstart', startDrag);
-  crystal.addEventListener('touchmove', drag);
-  crystal.addEventListener('touchend', endDrag);
-  
-  function startDrag(event) {
-    event.preventDefault();
-    isDragging = true;
-    startX = (event.touches ? event.touches[0].clientX : event.clientX);
-    startY = (event.touches ? event.touches[0].clientY : event.clientY);
-    
-    // Stop the default CSS animation
-    crystal.style.animation = 'none';
-    cancelAnimationFrame(animationFrame);
+      crystalImage.style.transform = `translateX(${translateX}%) rotateZ(${currentImageRotation}deg)`;
   }
 
-  function drag(event) {
-    if (!isDragging) return;
+  function startCrystalDrag(event) {
+    event.preventDefault();
+    isCrystalDragging = true;
+    crystalImage.classList.add('grabbing');
+    
+    // Stop the CSS animation and capture current rotation
+    const computedStyle = window.getComputedStyle(crystalImage);
+    const transformValue = computedStyle.getPropertyValue('transform'); // e.g., matrix(0.9..., 0.1..., ...)
+    const matrix = new DOMMatrixReadOnly(transformValue);
+    
+    // Extract rotation from matrix (only for Z-axis in 2D)
+    // atan2(sin_angle, cos_angle) gives angle in radians
+    const radians = Math.atan2(matrix.m12, matrix.m11);
+    currentImageRotation = radians * (180 / Math.PI); // Convert to degrees
+
+    crystalImage.style.animation = 'none'; // Stop CSS animation
+    
+    lastClientX = (event.touches ? event.touches[0].clientX : event.clientX);
+
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+  }
+
+  function crystalDrag(event) {
+    if (!isCrystalDragging) return;
     
     const clientX = (event.touches ? event.touches[0].clientX : event.clientX);
-    const clientY = (event.touches ? event.touches[0].clientY : event.clientY);
+    const deltaX = clientX - lastClientX;
     
-    const deltaX = clientX - startX;
-    const deltaY = clientY - startY;
+    currentImageRotation += deltaX * 0.5; // Adjust sensitivity
+    applyCrystalRotation();
 
-    // Adjust rotation based on drag speed
-    currentRotationY += deltaX * 0.5;
-    currentRotationX -= deltaY * 0.5;
-
-    // Apply the new rotation
-    crystal.style.transform = `rotateY(${currentRotationY}deg) rotateX(${currentRotationX}deg)`;
-
-    // Update start positions for next frame
-    startX = clientX;
-    startY = clientY;
+    lastClientX = clientX;
   }
 
-  function endDrag() {
-    isDragging = false;
-    // You could add some decay or momentum here if you want
-    // For now, it just stops.
+  function endCrystalDrag() {
+    isCrystalDragging = false;
+    crystalImage.classList.remove('grabbing');
+    
+    // Re-apply the continuous rotation from the new current position
+    // To seamlessly restart the animation, we need to set the starting point
+    crystalImage.style.animation = 'none'; // Clear any temporary animation
+    crystalImage.style.transform = `translateX(-50%) rotateZ(${currentImageRotation}deg)`;
+    
+    // For a seamless restart from the current position, a new animation is ideal.
+    // However, simply re-applying the existing CSS animation will reset its starting point to 0deg.
+    // A more advanced approach would involve calculating the remaining degrees and animation duration,
+    // or using Web Animations API. For simplicity and to resume rotation, we'll re-apply it.
+    // It will effectively jump to the next animation cycle from 0deg, or start from current if transform is sticky.
+    // A simpler immediate restart is:
+    setTimeout(() => {
+        crystalImage.style.animation = 'rotateCrystalImage 15s linear infinite';
+    }, 50); // Small delay to allow style update to register before animation restart
   }
+
+  crystalImage.addEventListener('mousedown', startCrystalDrag);
+  window.addEventListener('mousemove', crystalDrag);
+  window.addEventListener('mouseup', endCrystalDrag);
+
+  crystalImage.addEventListener('touchstart', startCrystalDrag);
+  window.addEventListener('touchmove', crystalDrag);
+  window.addEventListener('touchend', endCrystalDrag);
 });
