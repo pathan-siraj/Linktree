@@ -17,7 +17,6 @@
       min-height: 100vh;
       position: relative;
       
-      /* Base Gradient Background */
       background: linear-gradient(
         to bottom,
         #8a2be2 0%,
@@ -27,17 +26,16 @@
       );
     }
 
-    /* SVG Background Overlay */
     .background-svg {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -2; /* Ensure it's behind everything else */
-        opacity: 0.15; /* Adjust opacity to blend with the background */
-        pointer-events: none; /* Make it not interfere with clicks */
-        overflow: hidden; /* Prevent SVG content from spilling */
+        z-index: -2;
+        opacity: 0.15;
+        pointer-events: none;
+        overflow: hidden;
     }
 
     body.loading .profile-pic,
@@ -215,17 +213,103 @@
         -moz-user-select: none;
         -ms-user-select: none;
     }
-
-    #crystal-image.grabbing {
-        cursor: grabbing;
-        animation: none;
-    }
-
+    
     @keyframes rotateCrystalImage {
         from { transform: translateX(-50%) rotateZ(0deg); }
         to { transform: translateX(-50%) rotateZ(360deg); }
     }
+
+    /* Page Flip Container */
+    .flip-container {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        perspective: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
     
+    .flipper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .flip-container.flipped .flipper {
+        transform: rotateY(180deg);
+    }
+    
+    .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+    
+    .back {
+        transform: rotateY(180deg);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    
+    .back h2, .back p {
+        margin: 0;
+        text-align: center;
+    }
+    
+    .back h2 {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    .back .title {
+        font-size: 16px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+    .back .bio-text {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #eee;
+        text-align: justify;
+    }
+
+    /* New button for the flip effect */
+    .flip-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .flip-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 <body class="loading">
@@ -238,76 +322,89 @@
           <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:0.00" />
         </linearGradient>
       </defs>
-
       <path d="M 500 200 C 650 300, 650 700, 500 800 C 350 700, 350 300, 500 200 Z" fill="none" stroke="url(#lineGradient)" stroke-width="2" />
       <path d="M 500 300 C 600 375, 600 625, 500 700 C 400 625, 400 375, 500 300 Z" fill="none" stroke="url(#lineGradient)" stroke-width="1.5" />
       <circle cx="500" cy="500" r="50" fill="none" stroke="url(#lineGradient)" stroke-width="1" />
       <circle cx="500" cy="500" r="100" fill="none" stroke="url(#lineGradient)" stroke-width="0.5" />
-
       <line x1="500" y1="200" x2="50" y2="50" stroke="url(#lineGradient)" stroke-width="0.7" />
       <line x1="500" y1="200" x2="950" y2="50" stroke="url(#lineGradient)" stroke-width="0.7" />
       <line x1="500" y1="800" x2="50" y2="950" stroke="url(#lineGradient)" stroke-width="0.7" />
       <line x1="500" y1="800" x2="950" y2="950" stroke="url(#lineGradient)" stroke-width="0.7" />
-
       <line x1="500" y1="500" x2="0" y2="250" stroke="url(#lineGradient)" stroke-width="0.5" />
       <line x1="500" y1="500" x2="1000" y2="250" stroke="url(#lineGradient)" stroke-width="0.5" />
       <line x1="500" y1="500" x2="0" y2="750" stroke="url(#lineGradient)" stroke-width="0.5" />
       <line x1="500" y1="500" x2="1000" y2="750" stroke="url(#lineGradient)" stroke-width="0.5" />
-
       <line x1="500" y1="500" x2="200" y2="0" stroke="url(#lineGradient)" stroke-width="0.4" />
       <line x1="500" y1="500" x2="800" y2="0" stroke="url(#lineGradient)" stroke-width="0.4" />
       <line x1="500" y1="500" x2="200" y2="1000" stroke="url(#lineGradient)" stroke-width="0.4" />
       <line x1="500" y1="500" x2="800" y2="1000" stroke="url(#lineGradient)" stroke-width="0.4" />
-
       <line x1="500" y1="500" x2="0" y2="500" stroke="url(#lineGradient)" stroke-width="0.6" />
       <line x1="500" y1="500" x2="1000" y2="500" stroke="url(#lineGradient)" stroke-width="0.6" />
       <line x1="500" y1="500" x2="500" y2="0" stroke="url(#lineGradient)" stroke-width="0.6" />
       <line x1="500" y1="500" x2="500" y2="1000" stroke="url(#lineGradient)" stroke-width="0.6" />
-
       <path d="M 400 400 L 450 350 L 500 400 L 550 350 L 600 400 L 500 500 L 400 400 Z" fill="none" stroke="url(#lineGradient)" stroke-width="0.8" />
       <path d="M 400 600 L 450 650 L 500 600 L 550 650 L 600 600 L 500 500 L 400 600 Z" fill="none" stroke="url(#lineGradient)" stroke-width="0.8" />
-      
     </svg>
   </div>
 
-  <img class="profile-pic" src="profile.jpg" alt="Profile Picture">
-  <h1>Siraj Pathan</h1>
-  <p class="tagline">Social Media Accounts 🔗</p>
+  <div class="flip-btn" id="flip-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+    </svg>
+  </div>
 
-  <div class="links">
-    <div class="link-btn">
-      <div class="link-content">
-        <img src="insta.png" alt="Instagram" class="link-icon"> <a href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">Instagram</a>
+  <div class="flip-container" id="flip-container">
+    <div class="flipper">
+      <div class="front">
+        <img class="profile-pic" src="profile.jpg" alt="Profile Picture">
+        <h1>Siraj Pathan</h1>
+        <p class="tagline">Social Media Accounts 🔗</p>
+        <div class="links">
+          <div class="link-btn">
+            <div class="link-content">
+              <img src="insta.png" alt="Instagram" class="link-icon"> <a href="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" target="_blank">Instagram</a>
+            </div>
+            <span class="share-icon" data-title="Siraj's Instagram" data-url="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" data-text="Check out Siraj's Instagram profile!">⋮</span>
+          </div>
+          <div class="link-btn">
+            <div class="link-content">
+              <img src="discord.png" alt="Discord" class="link-icon"> <a href="https://discord.gg/HeRrkmST" target="_blank">Discord</a>
+            </div>
+            <span class="share-icon" data-title="Siraj's Discord" data-url="https://discord.gg/HeRrkmST" data-text="Join Siraj's Discord server!">⋮</span>
+          </div>
+          <div class="link-btn">
+            <div class="link-content">
+              <img src="twitter.jpg" alt="Twitter" class="link-icon"> <a href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">Twitter</a>
+            </div>
+            <span class="share-icon" data-title="Siraj's Twitter" data-url="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" data-text="Follow Siraj on Twitter!">⋮</span>
+          </div>
+          <div class="link-btn">
+            <div class="link-content">
+              <img src="linkedin.png" alt="LinkedIn" class="link-icon"> <a href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+            </div>
+            <span class="share-icon" data-title="Siraj's LinkedIn" data-url="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-text="Connect with Siraj on LinkedIn!">⋮</span>
+          </div>
+          <div class="link-btn">
+            <div class="link-content">
+              <img src="snapchat.png" alt="Snapchat" class="link-icon"> <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
+            </div>
+            <span class="share-icon" data-title="Siraj's Snapchat" data-url="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" data-text="Add Siraj on Snapchat!">⋮</span>
+          </div>
+        </div>
       </div>
-      <span class="share-icon" data-title="Siraj's Instagram" data-url="https://www.instagram.com/pathansiraj_?igsh=YXp3MnRiMHZ6dG40" data-text="Check out Siraj's Instagram profile!">⋮</span>
-    </div>
-
-    <div class="link-btn">
-      <div class="link-content">
-        <img src="discord.png" alt="Discord" class="link-icon"> <a href="https://discord.gg/HeRrkmST" target="_blank">Discord</a>
+      <div class="back">
+        <h2>Siraj Pathan</h2>
+        <p class="title">Oracle Fusion Cloud Engineer</p>
+        <p class="bio-text">
+          I’m an Oracle Fusion Cloud Engineer specializing in CX Sales & Service, Subscription Management, Product Information Management (PIM), Oracle Field Service Cloud (OFSC), and Configure-Price-Quote (CPQ). With hands-on experience in implementation, configuration, and end-to-end integrations, I help organizations deliver seamless customer experiences and optimize their digital transformation journey.
+        </p>
+        <p class="bio-text">
+          I’m passionate about leveraging Oracle Cloud applications to streamline customer engagement, automate workflows, and simplify complex sales processes. My focus is always on creating scalable, user-friendly, and efficient solutions that bridge business needs with advanced cloud technologies.
+        </p>
+        <p class="bio-text">
+          Outside of work, I love exploring new features in Oracle Cloud, building automation scripts, and sharing insights to help businesses unlock the full potential of their cloud systems.
+        </p>
       </div>
-      <span class="share-icon" data-title="Siraj's Discord" data-url="https://discord.gg/HeRrkmST" data-text="Join Siraj's Discord server!">⋮</span>
-    </div>
-
-    <div class="link-btn">
-      <div class="link-content">
-        <img src="twitter.jpg" alt="Twitter" class="link-icon"> <a href="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" target="_blank">Twitter</a>
-      </div>
-      <span class="share-icon" data-title="Siraj's Twitter" data-url="https://x.com/Pathansiraj_?t=KqX-P4m2jXfiuYE0lgLo4Q&s=09" data-text="Follow Siraj on Twitter!">⋮</span>
-    </div>
-
-    <div class="link-btn">
-      <div class="link-content">
-        <img src="linkedin.png" alt="LinkedIn" class="link-icon"> <a href="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
-      </div>
-      <span class="share-icon" data-title="Siraj's LinkedIn" data-url="https://www.linkedin.com/in/siraj-pathan-99819320b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" data-text="Connect with Siraj on LinkedIn!">⋮</span>
-    </div>
-
-    <div class="link-btn">
-      <div class="link-content">
-        <img src="snapchat.png" alt="Snapchat" class="link-icon"> <a href="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" target="_blank">Snapchat</a>
-      </div>
-      <span class="share-icon" data-title="Siraj's Snapchat" data-url="https://www.snapchat.com/add/pathan_sirajjj?share_id=_-Yb2qygqG8&locale=en-GB" data-text="Add Siraj on Snapchat!">⋮</span>
     </div>
   </div>
 
