@@ -16,6 +16,8 @@
       overflow: hidden;
       min-height: 100vh;
       position: relative;
+      
+      /* Base Gradient Background */
       background: linear-gradient(
         to bottom,
         #8a2be2 0%,
@@ -23,6 +25,19 @@
         #000000 80%,
         #000000 100%
       );
+    }
+
+    /* SVG Background Overlay */
+    .background-svg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2; /* Ensure it's behind everything else */
+        opacity: 0.15; /* Adjust opacity to blend with the background */
+        pointer-events: none; /* Make it not interfere with clicks */
+        overflow: hidden; /* Prevent SVG content from spilling */
     }
 
     body.loading .profile-pic,
@@ -185,51 +200,75 @@
       }
     }
 
-    /* Crystal and Scene CSS */
-    .crystal-container {
+    #crystal-image {
         position: fixed;
-        bottom: 10%; /* Place it in the black part of the page */
+        bottom: 10%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-50%) rotateZ(0deg);
         width: 150px;
-        height: 150px;
-        perspective: 500px;
+        height: auto;
+        cursor: grab;
         z-index: -1;
-    }
-    .crystal {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transform-style: preserve-3d;
-        cursor: pointer;
-        
-        /* Default slow rotation animation */
-        animation: rotate-crystal 10s linear infinite;
+        animation: rotateCrystalImage 15s linear infinite;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
     }
 
-    /* The individual faces of the crystal */
-    .face {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100px;
-        height: 100px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transform-origin: 0 0 -50px;
-        transform: rotateX(70deg) rotateY(45deg);
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
+    #crystal-image.grabbing {
+        cursor: grabbing;
+        animation: none;
     }
-    
-    /* Animation for continuous slow rotation */
-    @keyframes rotate-crystal {
-        from { transform: rotateY(0deg) rotateX(15deg); }
-        to { transform: rotateY(360deg) rotateX(15deg); }
+
+    @keyframes rotateCrystalImage {
+        from { transform: translateX(-50%) rotateZ(0deg); }
+        to { transform: translateX(-50%) rotateZ(360deg); }
     }
     
   </style>
 </head>
 <body class="loading">
+
+  <div class="background-svg">
+    <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0.05" />
+          <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:0.00" />
+        </linearGradient>
+      </defs>
+
+      <path d="M 500 200 C 650 300, 650 700, 500 800 C 350 700, 350 300, 500 200 Z" fill="none" stroke="url(#lineGradient)" stroke-width="2" />
+      <path d="M 500 300 C 600 375, 600 625, 500 700 C 400 625, 400 375, 500 300 Z" fill="none" stroke="url(#lineGradient)" stroke-width="1.5" />
+      <circle cx="500" cy="500" r="50" fill="none" stroke="url(#lineGradient)" stroke-width="1" />
+      <circle cx="500" cy="500" r="100" fill="none" stroke="url(#lineGradient)" stroke-width="0.5" />
+
+      <line x1="500" y1="200" x2="50" y2="50" stroke="url(#lineGradient)" stroke-width="0.7" />
+      <line x1="500" y1="200" x2="950" y2="50" stroke="url(#lineGradient)" stroke-width="0.7" />
+      <line x1="500" y1="800" x2="50" y2="950" stroke="url(#lineGradient)" stroke-width="0.7" />
+      <line x1="500" y1="800" x2="950" y2="950" stroke="url(#lineGradient)" stroke-width="0.7" />
+
+      <line x1="500" y1="500" x2="0" y2="250" stroke="url(#lineGradient)" stroke-width="0.5" />
+      <line x1="500" y1="500" x2="1000" y2="250" stroke="url(#lineGradient)" stroke-width="0.5" />
+      <line x1="500" y1="500" x2="0" y2="750" stroke="url(#lineGradient)" stroke-width="0.5" />
+      <line x1="500" y1="500" x2="1000" y2="750" stroke="url(#lineGradient)" stroke-width="0.5" />
+
+      <line x1="500" y1="500" x2="200" y2="0" stroke="url(#lineGradient)" stroke-width="0.4" />
+      <line x1="500" y1="500" x2="800" y2="0" stroke="url(#lineGradient)" stroke-width="0.4" />
+      <line x1="500" y1="500" x2="200" y2="1000" stroke="url(#lineGradient)" stroke-width="0.4" />
+      <line x1="500" y1="500" x2="800" y2="1000" stroke="url(#lineGradient)" stroke-width="0.4" />
+
+      <line x1="500" y1="500" x2="0" y2="500" stroke="url(#lineGradient)" stroke-width="0.6" />
+      <line x1="500" y1="500" x2="1000" y2="500" stroke="url(#lineGradient)" stroke-width="0.6" />
+      <line x1="500" y1="500" x2="500" y2="0" stroke="url(#lineGradient)" stroke-width="0.6" />
+      <line x1="500" y1="500" x2="500" y2="1000" stroke="url(#lineGradient)" stroke-width="0.6" />
+
+      <path d="M 400 400 L 450 350 L 500 400 L 550 350 L 600 400 L 500 500 L 400 400 Z" fill="none" stroke="url(#lineGradient)" stroke-width="0.8" />
+      <path d="M 400 600 L 450 650 L 500 600 L 550 650 L 600 600 L 500 500 L 400 600 Z" fill="none" stroke="url(#lineGradient)" stroke-width="0.8" />
+      
+    </svg>
+  </div>
 
   <img class="profile-pic" src="profile.jpg" alt="Profile Picture">
   <h1>Siraj Pathan</h1>
@@ -272,16 +311,7 @@
     </div>
   </div>
 
-  <div class="crystal-container">
-    <div class="crystal" id="crystal">
-      <div class="face"></div>
-      <div class="face"></div>
-      <div class="face"></div>
-      <div class="face"></div>
-      <div class="face"></div>
-      <div class="face"></div>
-    </div>
-  </div>
+  <img id="crystal-image" src="crystal.png" alt="Crystal">
 
   <footer>
     © 2025 Siraj Pathan | Made with ❤️
